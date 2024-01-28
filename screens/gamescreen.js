@@ -6,8 +6,8 @@ export default function GameScreen({
   correctNumber,
   userGuessedNumber,
   attemptsLeft,
-  onPlayAgain,
-  onThankYou, }) {
+  onTryAgain,
+  onIamDone, }) {
   
   let message = "";
   let isWinner = false;
@@ -21,6 +21,7 @@ export default function GameScreen({
   } else {
     isWinner = true;
   }
+
 
   function handlePlayAgain () {
     onPlayAgain(attemptsLeft);
@@ -50,10 +51,10 @@ export default function GameScreen({
 
           <View style={styles.buttonsContainer}>
             <View style={styles.buttonView}>
-              <Button title="Let Me Guess Again" onPress={onPlayAgain} />
+              <Button title="Let Me Guess Again" onPress={onTryAgain} />
             </View>
             <View style={styles.buttonView}>
-              <Button title="I am done" onPress={onThankYou} />
+              <Button title="I am done" onPress={onIamDone} />
             </View>
           </View>
         </View>

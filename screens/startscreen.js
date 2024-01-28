@@ -1,7 +1,5 @@
 import {
   Button,
-  Image,
-  Modal,
   StyleSheet,
   Text,
   TextInput,
@@ -11,7 +9,7 @@ import Checkbox from 'expo-checkbox';
 import React, { useState } from "react";
 
 
-export default function StartScreen({ inputHandler,  setAttemptsLeft, dismissModal,setUserData}) {
+export default function StartScreen({ inputHandler,  setAttemptsLeft, dismissModal,setUserData,}) {
   const [text, setText] = useState("");
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -19,13 +17,6 @@ export default function StartScreen({ inputHandler,  setAttemptsLeft, dismissMod
   const [isValidNumber, setIsValidNumber] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
   
-
-  // callback handler
-  function changeTextHandler(changedText) {
-    console.log("user is typing ", changedText);
-
-    setText(changedText);
-  }
 
   function checkNameValidity() {
     setIsValidName(name.length > 1 && !/^\d+$/.test(name));
@@ -50,9 +41,7 @@ export default function StartScreen({ inputHandler,  setAttemptsLeft, dismissMod
       // Perform actions when both name and number are valid
       // For example, navigate to the next screen or start the game
       setUserData({ userName: name, userNumber: number });
-      
       inputHandler(name, number);
-      setAttemptsLeft(2);
    
     }
   }

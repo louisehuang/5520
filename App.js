@@ -9,33 +9,44 @@ export default function App() {
   const appName = "Guess My Number";
   const [text, setText] = useState("");
   const [screen, setScreen] = useState("start"); // start, game, final
-  const [guessNumber, setGuessNumber] = useState("");
+  const [correctNumber, setCorrectNumber] = useState("");
   const [attemptsLeft, setAttemptsLeft] = useState(2);
   const [userData, setUserData] = useState({ userName: "", userNumber: "" });
 
-  function startGame(name) {
-    const newRandomNumber = Math.floor(Math.random() * 10) + 1020;
-    setUserData({ userName: name, userNumber: newRandomNumber });
-    // Generate a new random number for the user to guess
-    
-    setPlayerName(name);
-    setGuessNumber(newRandomNumber);
-    setAttemptsLeft(2);
+  function startGame() {
+    // Reset userData for a new game
+    setUserData({ userName: "", userNumber: "" });
+
+    // If correctNumber is not set, generate a new random number
+    if (!correctNumber) {
+      const newRandomNumber = Math.floor(Math.random() * 10) + 1020;
+      setCorrectNumber(newRandomNumber);
+    }
+    else{
+      setCorrectNumber(correctNumber)
+
+    }
     setScreen("game");
   }
 
-  function handlePlayAgain () {
+
+  function handleTryAgain () {
     // Generate a new random number for the user to guess
-    const newRandomNumber = Math.floor(Math.random() * 10) + 1020;
-    setGuessNumber(newRandomNumber);
+    //setUserData({ userName: userData.userName, userNumber: "" });
+    //setCorrectNumber(correctNumber);
+    //setScreen("start");
+
+    
+    setCorrectNumber(correctNumber);
     setAttemptsLeft(2);
     setScreen("start");
+    
   };
 
 
-  function receiveInput(data) {
-    console.log("receive input ", data);
-    setText(data);
+  function receiveInput(name,number) {
+    console.log("receive input ", name,number);
+    setUserData({ userName: name, userNumber: number });
     setScreen("game");
   }
 
@@ -43,9 +54,9 @@ export default function App() {
     setScreen("start");
   }
 
-  function handleThankYou() {
-    setPlayerName("");
-    setGuessNumber("");
+  function handleIamDone() {
+    setUserData({ userName: "", userNumber: "" });
+    setCorrectNumber("");
     setAttemptsLeft(2);
     setScreen("final");
   }
@@ -63,17 +74,20 @@ export default function App() {
             modalVisible={screen === "game"}
             dismissModal={dismissModal}
             setUserData={setUserData} 
+            startGame={startGame}
+            
           />
         )}
+
 
         {screen === "game" && (
           <GameScreen
             playerName={userData.userName} // Pass the player name dynamically
-            correctNumber={guessNumber}
-            userGuessedNumber ={userData.number}
+            correctNumber={correctNumber}
+            userGuessedNumber ={userData.userNumber}
             attemptsLeft={attemptsLeft}
-            onPlayAgain={handlePlayAgain}
-            onThankYou={handleThankYou}
+            onTryAgain={handleTryAgain}
+            onIamDone={handleIamDone}
           />
         )}
 
@@ -82,7 +96,7 @@ export default function App() {
 
       <View style={styles.bottomView}>
         <Text style={styles.text}>{text}</Text>
-      </View>
+      </View>   
     </SafeAreaView>
   );
 }
