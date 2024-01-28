@@ -1,5 +1,7 @@
 import {
   Button,
+  Image,
+  Modal,
   StyleSheet,
   Text,
   TextInput,
@@ -9,14 +11,12 @@ import Checkbox from 'expo-checkbox';
 import React, { useState } from "react";
 
 
-export default function StartScreen({ inputHandler,  setAttemptsLeft, dismissModal,setUserData,}) {
-  const [text, setText] = useState("");
-  const [name, setName] = useState('');
+export default function StartScreen({ inputHandler, originalUserName, setAttemptsLeft, dismissModal,setUserData}) {
+  const [name, setName] = useState(originalUserName || '');
   const [number, setNumber] = useState('');
   const [isValidName, setIsValidName] = useState(true);
   const [isValidNumber, setIsValidNumber] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
-  
 
   function checkNameValidity() {
     setIsValidName(name.length > 1 && !/^\d+$/.test(name));
@@ -41,16 +41,12 @@ export default function StartScreen({ inputHandler,  setAttemptsLeft, dismissMod
       // Perform actions when both name and number are valid
       // For example, navigate to the next screen or start the game
       setUserData({ userName: name, userNumber: number });
+      
       inputHandler(name, number);
    
     }
   }
 
-
-  function cancelHandler() {
-    // hide the modal
-    dismissModal();
-  }
   return (
     <View style={styles.container}>
 
@@ -58,7 +54,7 @@ export default function StartScreen({ inputHandler,  setAttemptsLeft, dismissMod
         <Text style={styles.labelText}>Name:</Text>
         <TextInput
           style={[styles.input, !isValidName && styles.invalidInput]}
-          value={name}
+          value={name || originalUserName}
       
           onChangeText={(text) => setName(text)}
           onBlur={checkNameValidity}

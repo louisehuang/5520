@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StatusBar, StyleSheet, Text, View,SafeAreaView } from "react-native";
 import Header from "./components/Header";
 import StartScreen from "./screens/startscreen";
@@ -7,45 +7,47 @@ import FinalScreen from "./screens/finalscreen";
 
 export default function App() {
   const appName = "Guess My Number";
-  const [text, setText] = useState("");
   const [screen, setScreen] = useState("start"); // start, game, final
   const [correctNumber, setCorrectNumber] = useState("");
   const [attemptsLeft, setAttemptsLeft] = useState(2);
   const [userData, setUserData] = useState({ userName: "", userNumber: "" });
 
-  function startGame() {
+  useEffect(() => {
+    // Generate initial random number when the component mounts
+    setCorrectNumber(generateRandomNumber());
+  }, []);
+
+  function generateRandomNumber() {
+    return Math.floor(Math.random() * 10) + 1020;
+  }
+
+  function startGame(name) {
     // Reset userData for a new game
-    setUserData({ userName: "", userNumber: "" });
+    setUserData({ userName: name, userNumber: "" });
 
     // If correctNumber is not set, generate a new random number
     if (!correctNumber) {
-      const newRandomNumber = Math.floor(Math.random() * 10) + 1020;
-      setCorrectNumber(newRandomNumber);
+      setCorrectNumber(generateRandomNumber());
     }
     else{
       setCorrectNumber(correctNumber)
-
     }
+
+    setAttemptsLeft(2);
     setScreen("game");
   }
 
 
   function handleTryAgain () {
     // Generate a new random number for the user to guess
-    //setUserData({ userName: userData.userName, userNumber: "" });
-    //setCorrectNumber(correctNumber);
-    //setScreen("start");
-
-    
-    setCorrectNumber(correctNumber);
-    setAttemptsLeft(2);
+    startGame(userData.userName);
+    setAttemptsLeft(attemptsLeft - 1);
     setScreen("start");
     
   };
 
 
   function receiveInput(name,number) {
-    console.log("receive input ", name,number);
     setUserData({ userName: name, userNumber: number });
     setScreen("game");
   }
@@ -73,9 +75,11 @@ export default function App() {
             inputHandler={receiveInput}
             modalVisible={screen === "game"}
             dismissModal={dismissModal}
+            startGame={startGame} 
             setUserData={setUserData} 
-            startGame={startGame}
-            
+            originalUserName={userData.userName}
+            correctNumber={correctNumber} 
+
           />
         )}
 
@@ -95,7 +99,7 @@ export default function App() {
       </View>
 
       <View style={styles.bottomView}>
-        <Text style={styles.text}>{text}</Text>
+       
       </View>   
     </SafeAreaView>
   );

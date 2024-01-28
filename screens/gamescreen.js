@@ -9,8 +9,7 @@ export default function GameScreen({
   onTryAgain,
   onIamDone, }) {
   
-  let message = "";
-  let isWinner = false;
+    let isWinner = false;
 
   if (userGuessedNumber < correctNumber) {
     message = "That's not my number! Guess higher!";
@@ -32,10 +31,9 @@ export default function GameScreen({
       
       <View style={styles.container}>
         <View style={styles.card}>
-        <Text style={styles.labelText}>{playerName} You have chosen {userGuessedNumber}</Text>
-        <Text style={styles.labelText}> correct {correctNumber}</Text>
 
-          {/*isWinner ? (
+        <Text> correct {correctNumber} </Text>
+          {isWinner ? (
             <>
               <Text>Congratulations {playerName}! You won!</Text>
             </>
@@ -43,10 +41,13 @@ export default function GameScreen({
             <>
               <Text style={styles.labelText}>Hello, {playerName}</Text>
               <Text style={styles.labelText}>You have chosen {userGuessedNumber}</Text>
+              <Text> {message} </Text>
+              
+
               <Text>{`You have ${attemptsLeft} attempts left!`}</Text>
             
             </>
-          )*/}
+          )}
 
 
           <View style={styles.buttonsContainer}>
