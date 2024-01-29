@@ -1,21 +1,29 @@
 import React from "react";
 import { View, Text, Image, Button, StyleSheet } from "react-native";
+import Card from '../components/Card';
 
 export default function FinalScreen({ isWinner, onRestartGame }) {
+  const headerTwo = "Game Is Over!";
   return (
     <View style={styles.container}>
-      <Text>{isWinner ? "Congratulations!" : "Better luck next time!"}</Text>
-
-      {isWinner ? (
+      
+      <Card>
+        <Text>Here's your picture</Text>
+        {isWinner ? (
         <Image
-          source={{ uri: `https://picsum.photos/id/${Math.floor(Math.random() * 1000)}/100/100` }}
+          source={{ 
+            uri: "https://picsum.photos/id/1024/100/100", }}
           style={styles.image}
         />
       ) : (
+      
         <Image source={require("../assets/Sad-face.png")} style={styles.image} />
       )}
 
-      <Button title="Start Again" onPress={onRestartGame} />
+      <Button title="Start Again" onPress={onRestartGame} /></Card>
+      
+
+      
     </View>
   );
 }
@@ -27,8 +35,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
     marginVertical: 10,
   },
 });

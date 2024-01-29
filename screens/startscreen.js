@@ -1,7 +1,5 @@
 import {
   Button,
-  Image,
-  Modal,
   StyleSheet,
   Text,
   TextInput,
@@ -9,11 +7,14 @@ import {
 } from "react-native";
 import Checkbox from 'expo-checkbox';
 import React, { useState } from "react";
+import Card from '../components/Card';
+import CustomButton from "../components/CustomButton";
 
 
-export default function StartScreen({ inputHandler, originalUserName, setAttemptsLeft, dismissModal,setUserData}) {
+
+export default function StartScreen({ inputHandler, originalUserName,originalUserNumber,setUserData}) {
   const [name, setName] = useState(originalUserName || '');
-  const [number, setNumber] = useState('');
+  const [number, setNumber] = useState(originalUserNumber ||'');
   const [isValidName, setIsValidName] = useState(true);
   const [isValidNumber, setIsValidNumber] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
@@ -48,9 +49,10 @@ export default function StartScreen({ inputHandler, originalUserName, setAttempt
   }
 
   return (
+    
     <View style={styles.container}>
-
-      <View style={styles.card}>
+      
+      <Card>
         <Text style={styles.labelText}>Name:</Text>
         <TextInput
           style={[styles.input, !isValidName && styles.invalidInput]}
@@ -64,7 +66,7 @@ export default function StartScreen({ inputHandler, originalUserName, setAttempt
         <Text style={styles.labelText}>Enter a Number:</Text>
         <TextInput
           style={[styles.input, !isValidNumber && styles.invalidInput]}
-          value={number}
+          value={number || originalUserNumber}
           keyboardType="number-pad"
           maxLength={4}
           onChangeText={(text) => setNumber(text)}
@@ -80,7 +82,7 @@ export default function StartScreen({ inputHandler, originalUserName, setAttempt
 
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonView}>
-            <Button title="Reset" onPress={handleReset} />
+            <CustomButton title="Reset" onPress={handleReset} />
           </View>
           <View style={styles.buttonView}>
             <Button title="Confirm" onPress={handleConfirm} 
@@ -88,7 +90,7 @@ export default function StartScreen({ inputHandler, originalUserName, setAttempt
               />
           </View>
         </View>
-      </View>
+        </Card>
     </View> 
 
   );
@@ -96,47 +98,28 @@ export default function StartScreen({ inputHandler, originalUserName, setAttempt
 
 const styles = StyleSheet.create({
   buttonView: {
-    width: "30%",
+    width: "35%",
     margin: 5,
   },
   buttonsContainer: { flexDirection: "row" },
   input: {
-    borderBottomWidth: 2,
+    borderBottomWidth: 10,
     borderBottomColor: "purple",
     width: "50%",
   },
-  //这是中间的框，不知道干嘛的
   container: {
     flex: 1,
     backgroundColor: "lavenderblush",
     alignItems: "center",
     justifyContent: "center",
   },
-  image: { width: 100, height: 100 },
-  card: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: 'grey',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: 'c0c0c0',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
   input: {
     borderBottomWidth: 1,
-    borderBottomColor: 'black', // Change this color as needed
+    borderBottomColor: 'purple', 
     marginBottom: 10,
     paddingVertical: 5,
   },
-  invalidInput: {
-    borderColor: 'red',
-  },
+
   labelText: {
     color: 'purple',
     fontSize: 25,

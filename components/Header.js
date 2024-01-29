@@ -15,6 +15,8 @@ const styles = StyleSheet.create({
   header: {
     color: "mediumpurple",
     fontSize: 30,
+    marginTop: 20,
+    marginBottom: 20,
   },
   
 });
