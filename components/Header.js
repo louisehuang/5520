@@ -16,7 +16,8 @@ const styles = StyleSheet.create({
     color: "mediumpurple",
     fontSize: 30,
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 20, 
+    
   },
   
 });
