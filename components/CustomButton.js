@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { COMMON_STYLES, COLORS, LOCATION } from '../components/styles';
 
 const CustomButton = ({ title, onPress, disabled }) => {
   return (
@@ -17,14 +18,14 @@ export const styles = StyleSheet.create({
   button: {
     padding:8,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: LOCATION.center,
   },
   buttonText: {
-    color: 'firebrick',
+    color: COLORS.button,
     fontSize: 20,
   },
   disabledButton: {
-    backgroundColor: 'gray',
+    backgroundColor: COLORS.grey,
   },
 });
 

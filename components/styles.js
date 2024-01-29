@@ -1,8 +1,12 @@
-import { StatusBar } from "react-native";
+
 export const COLORS = {
   background:"lavenderblush",
   text:'purple',
-  header:'mediumpurple'
+  header:'mediumpurple',
+  grey:'grey',
+  darkgray: "darkgray",
+  showdow:"'c0c0c0'",
+  button: 'firebrick',
 
 };
 export const LOCATION = {
@@ -17,7 +21,7 @@ export const LOCATION = {
       justifyContent: LOCATION.center,
       alignItems: LOCATION.center,
       backgroundColor: COLORS.background,
-      paddingTop: 15,
+      
     },
     topView: {
       flex: 1,

@@ -46,13 +46,12 @@ export default function GameScreen({
           ) : (
             <>
               <CustomText style={{ fontWeight: 'bold' }} >Hello, {playerName}</CustomText>
-              <CustomText>correct{correctNumber}</CustomText>
               <CustomText>You have chosen {userGuessedNumber}</CustomText>
               <CustomText>That's not my number!</CustomText>
               <CustomText>{message} </CustomText>
 
               {attemptsLeft > 0 ? (
-              <CustomText>{`You have ${attemptsLeft} attempts left!`}</CustomText>
+              <CustomText>{`You have ${attemptsLeft} attempts left!`} </CustomText>
             ) : (
               <CustomText>{`You have no attempts left!`}</CustomText>
             )}

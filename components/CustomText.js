@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
+import { COLORS, LOCATION} from '../components/styles';
 
 const CustomText = ({ children }) => {
   return (
@@ -11,9 +12,9 @@ const CustomText = ({ children }) => {
 
 const styles = StyleSheet.create({
   labelText: {
-    color: 'purple',
+    color: COLORS.text,
     fontSize: 25,
-    textAlign: 'center',
+    textAlign: LOCATION.center,
   },
 });
 

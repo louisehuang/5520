@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Platform, StyleSheet } from 'react-native';
-
+import { COLORS } from '../components/styles';
 
 const Card = ({ children }) => {
   return (
@@ -12,11 +12,11 @@ const Card = ({ children }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "darkgray",
+    backgroundColor: COLORS.darkgray,
     borderRadius: 10,
     ...Platform.select({
       ios: {
-        shadowColor: 'c0c0c0',
+        shadowColor: COLORS.showdow,
         shadowOpacity: 0.5,
         shadowOffset: {
           width: 0,

@@ -4,9 +4,12 @@ import {
   Text,
   TextInput,
   View,
+  SafeAreaView,
+  Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import Checkbox from 'expo-checkbox';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Card from '../components/Card';
 import CustomButton from "../components/CustomButton";
 import { COMMON_STYLES, COLORS, LOCATION } from '../components/styles';
@@ -20,6 +23,22 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
   const [isValidNumber, setIsValidNumber] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
   const [confirmPressed, setConfirmPressed] = useState(true);
+  
+  //if the android keyboard showsup
+  useEffect(() => {
+    //dynamically adjust the layout when the keyboard is shown or hidden
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
+
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+     
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   
   function checkNameValidity() {
     setIsValidName(name.length > 1 && !/^\d+$/.test(name));
@@ -42,6 +61,7 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
   }
   
   function handleConfirm() {
+    //check name and number is valid after first attempt
     checkNameValidity();
     checkNumberValidity();
   
@@ -56,50 +76,57 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
 
   return (
     
-    <View style={COMMON_STYLES.container}>
-      <Card>
-      <Text style={COMMON_STYLES.labelText}>Name:</Text>
-        <TextInput
-          style={[styles.input, !isValidName && styles.invalidInput]}
-          value={name || originalUserName}
-          onChangeText={(text) => {
-            setName(text);
-            checkNameValidity(); // Check the validity on each text change
-          }}
-          onBlur={checkNameValidity}
-        />
-        {confirmPressed && !isValidName && <Text style={styles.errorText}>Invalid Name</Text>}
+    <SafeAreaView style={COMMON_STYLES.container}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => Keyboard.dismiss()}
+        style={{ flex: 1 }}
+      >
+        <Card>
+        <Text style={COMMON_STYLES.labelText}>Name:</Text>
+          <TextInput
+            style={[styles.input, !isValidName && styles.invalidInput]}
+            
+            value={name || originalUserName}
+            onChangeText={(text) => {
+              setName(text);
+              checkNameValidity(); // Check the validity on each text change
+            }}
+            onBlur={checkNameValidity}
+          />
+          {confirmPressed && !isValidName && <Text style={styles.errorText}>Invalid Name</Text>}
 
-        <Text style={COMMON_STYLES.labelText}>Enter a Number:</Text>
-        <TextInput
-          style={[styles.input, !isValidNumber && styles.invalidInput]}
-          value={number || originalUserNumber}
-          keyboardType="number-pad"
-          maxLength={4}
-          onChangeText={(text) => {
-            setNumber(text);
-            checkNumberValidity(); // Check the validity on each text change
-          }}
-          
-          onBlur={checkNumberValidity}
-        />
-        {confirmPressed && !isValidNumber && <Text style={[styles.errorText, { marginTop: 1 }]}>Please enter a valid number</Text>}
+          <Text style={COMMON_STYLES.labelText}>Enter a Number:</Text>
+          <TextInput
+            style={[styles.input, !isValidNumber && styles.invalidInput]}
+            value={number || originalUserNumber}
+            keyboardType="number-pad"
+            maxLength={4}
+            onChangeText={(text) => {
+              setNumber(text);
+              checkNumberValidity(); // Check the validity on each text change
+            }}
+            
+            onBlur={checkNumberValidity}
+          />
+          {confirmPressed && !isValidNumber && <Text style={[styles.errorText, { marginTop: 1 }]}>Please enter a valid number</Text>}
 
-        <View style={styles.section}>
-          <Checkbox style={styles.checkbox} value={isChecked} onValueChange={setIsChecked} />
-          <Text style={COMMON_STYLES.labelText}>I am not a robot</Text>
-        </View>
-
-        <View style={styles.buttonsContainer}>
-          <View style={styles.buttonView}>
-            <CustomButton title="Reset" onPress={handleReset} />
+          <View style={styles.section}>
+            <Checkbox style={styles.checkbox} value={isChecked} onValueChange={setIsChecked} />
+            <Text style={COMMON_STYLES.labelText}>I am not a robot</Text>
           </View>
-          <View style={styles.buttonView}>
-            <Button title="Confirm" onPress={handleConfirm} disabled={!isChecked} />
+
+          <View style={styles.buttonsContainer}>
+            <View style={styles.buttonView}>
+              <CustomButton title="Reset" onPress={handleReset} />
+            </View>
+            <View style={styles.buttonView}>
+              <Button title="Confirm" onPress={handleConfirm} disabled={!isChecked} />
+            </View>
           </View>
-        </View>
-      </Card>
-    </View>
+        </Card>
+        </TouchableOpacity>
+    </SafeAreaView>
 
   );
 }
@@ -118,7 +145,7 @@ const styles = StyleSheet.create({
   input: {
     borderBottomWidth: 1,
     borderBottomColor: COLORS.text,
-    fontSize: 25, 
+    fontSize: 20, 
     color:COLORS.header,
     marginBottom: 10,
     paddingVertical: 5,

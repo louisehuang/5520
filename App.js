@@ -5,7 +5,6 @@ import StartScreen from "./screens/startscreen";
 import GameScreen from "./screens/gamescreen";
 import FinalScreen from "./screens/finalscreen";
 import { COMMON_STYLES } from './components/styles';
-import { KeyboardAvoidingView, Platform } from 'react-native';
 
 export default function App() {
   const [screen, setScreen] = useState("start"); // start, game, final
@@ -82,6 +81,7 @@ export default function App() {
         {screen === "start" && (
           <Header name="Guess My Number" version={2} />
         )}
+
         {screen === "start" && (
           <StartScreen
             inputHandler={receiveInput}
