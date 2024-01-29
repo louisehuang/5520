@@ -42,6 +42,7 @@ export default function App() {
     setAttemptsLeft(attemptsLeft - 1);
     setScreen("start");
     
+    
   };
 
 
@@ -85,6 +86,7 @@ export default function App() {
             startGame={startGame} 
             setUserData={setUserData} 
             originalUserName={userData.userName}
+            originalUserNumber={userData.userNumber}
             correctNumber={correctNumber} 
 
           />
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 18,
+    fontSize: 25,
     color: "purple",
   },
 });

@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Modal, StyleSheet, Text, View } from "react-native";
 import Card from '../components/Card';
 import CustomButton from "../components/CustomButton";
+import CustomText from "../components/CustomText";
 
 export default function GameScreen({
   playerName,
@@ -34,24 +35,24 @@ export default function GameScreen({
     <Modal animationType="slide" transparent={true} visible={true}>
       
       <View style={styles.container}>
-        <View style={styles.card}>
-        <Card><Text> correct {correctNumber} </Text>
+        <View>
+        <Card>
           {isWinner ? (
             <>
-              <Text>Congratulations {playerName}! You won!</Text>
+              <CustomText style={{textAlign: 'center' }}>Congratulations {playerName}! You won!</CustomText>
               <Button title="Thank You" onPress={onThankYou} />
             </>
           ) : (
             <>
-              <Text style={styles.labelText}>Hello, {playerName}</Text>
-              <Text style={styles.labelText}>You have chosen {userGuessedNumber}</Text>
-              <Text> That's not my number!{message} </Text>
-            
+              <CustomText style={{ fontWeight: 'bold' }} >Hello, {playerName}</CustomText>
+              <CustomText>You have chosen {userGuessedNumber}</CustomText>
+              <CustomText>That's not my number!</CustomText>
+              <CustomText>{message} </CustomText>
 
               {attemptsLeft > 0 ? (
-              <Text>{`You have ${attemptsLeft} attempts left!`}</Text>
+              <CustomText>{`You have ${attemptsLeft} attempts left!`}</CustomText>
             ) : (
-              <Text>{`You have no attempts left!`}</Text>
+              <CustomText>{`You have no attempts left!`}</CustomText>
             )}
 
             <View style={styles.buttonsContainer}>
@@ -102,10 +103,6 @@ const styles = StyleSheet.create({
   },
   invalidInput: {
     borderColor: 'red',
-  },
-  labelText: {
-    color: 'purple',
-    fontSize: 25,
   },
 
 });
