@@ -9,7 +9,7 @@ import Checkbox from 'expo-checkbox';
 import React, { useState } from "react";
 import Card from '../components/Card';
 import CustomButton from "../components/CustomButton";
-import CustomText from "../components/CustomText";
+import { COMMON_STYLES, COLORS, LOCATION } from '../components/styles';
 
 
 
@@ -33,8 +33,8 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
   }
 
   function handleReset() {
-    setName('');
-    setNumber('');
+    setName(originalUserName || '');
+    setNumber(originalUserNumber || '');
     setIsValidName(true);
     setIsValidNumber(true);
     setIsChecked(false);
@@ -56,9 +56,9 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
 
   return (
     
-    <View style={styles.container}>
+    <View style={COMMON_STYLES.container}>
       <Card>
-      <Text style={styles.labelText}>Name:</Text>
+      <Text style={COMMON_STYLES.labelText}>Name:</Text>
         <TextInput
           style={[styles.input, !isValidName && styles.invalidInput]}
           value={name || originalUserName}
@@ -70,7 +70,7 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
         />
         {confirmPressed && !isValidName && <Text style={styles.errorText}>Invalid Name</Text>}
 
-        <Text style={styles.labelText}>Enter a Number:</Text>
+        <Text style={COMMON_STYLES.labelText}>Enter a Number:</Text>
         <TextInput
           style={[styles.input, !isValidNumber && styles.invalidInput]}
           value={number || originalUserNumber}
@@ -87,7 +87,7 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
 
         <View style={styles.section}>
           <Checkbox style={styles.checkbox} value={isChecked} onValueChange={setIsChecked} />
-          <Text style={styles.labelText}>I am not a robot</Text>
+          <Text style={COMMON_STYLES.labelText}>I am not a robot</Text>
         </View>
 
         <View style={styles.buttonsContainer}>
@@ -112,32 +112,21 @@ const styles = StyleSheet.create({
   buttonsContainer: { flexDirection: "row" },
   input: {
     borderBottomWidth: 10,
-    borderBottomColor: "purple",
+    borderBottomColor: COLORS.text,
     width: "50%",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "lavenderblush",
-    alignItems: "center",
-    justifyContent: "center",
   },
   input: {
     borderBottomWidth: 1,
-    borderBottomColor: "purple",
+    borderBottomColor: COLORS.text,
     fontSize: 25, 
-    color:'mediumpurple',
+    color:COLORS.header,
     marginBottom: 10,
     paddingVertical: 5,
   },
 
-  labelText: {
-    color: 'purple',
-    fontSize: 25,
-  },
-
   checkboxContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: LOCATION.center,
   },
   checkboxLabel: {
     marginLeft: 10,

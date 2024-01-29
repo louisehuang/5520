@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StatusBar, StyleSheet, View,SafeAreaView } from "react-native";
+import { StatusBar, View,SafeAreaView } from "react-native";
 import Header from "./components/Header";
 import StartScreen from "./screens/startscreen";
 import GameScreen from "./screens/gamescreen";
 import FinalScreen from "./screens/finalscreen";
+import { COMMON_STYLES } from './components/styles';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 
 export default function App() {
   const [screen, setScreen] = useState("start"); // start, game, final
@@ -37,11 +39,9 @@ export default function App() {
 
 
   function handleTryAgain () {
-    // Generate a new random number for the user to guess
     startGame(userData.userName, userData.userNumber);
     setAttemptsLeft(attemptsLeft - 1);
     setScreen("start");
-    
     
   };
 
@@ -68,11 +68,14 @@ export default function App() {
     setScreen("final");
   }
 
+  
+
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.topView}>
+    <SafeAreaView style={COMMON_STYLES.container}>
+      <View style={COMMON_STYLES.topView}>
         <StatusBar style="auto" />
+
         {screen === "final" && (
           <Header name="Game Is Over!" version={2} />
         )}
@@ -85,6 +88,8 @@ export default function App() {
             modalVisible={screen === "game"}
             startGame={startGame} 
             setUserData={setUserData} 
+
+            //the name and number entered previously will be displayed in textInput
             originalUserName={userData.userName}
             originalUserNumber={userData.userNumber}
             correctNumber={correctNumber} 
@@ -95,9 +100,10 @@ export default function App() {
 
         {screen === "game" && (
           <GameScreen
-            playerName={userData.userName} // Pass the player name dynamically
-            correctNumber={correctNumber}
+            //// Pass the player name and number
+            playerName={userData.userName}   
             userGuessedNumber ={userData.userNumber}
+            correctNumber={correctNumber}
             attemptsLeft={attemptsLeft}
             onTryAgain={handleTryAgain}
             onIamDone={handleIamDone}
@@ -111,32 +117,10 @@ export default function App() {
         onRestartGame={restartGame} />}
       </View>
 
-      <View style={styles.bottomView}>
+      <View style={COMMON_STYLES.bottomView}>
        
       </View>   
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "lavenderblush",
-    justifyContent: "center",
-  },
-  topView: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "lavenderblush",
-    justifyContent: "center",
-  },
-  bottomView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 25,
-    color: "purple",
-  },
-});

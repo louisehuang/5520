@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, Modal, StyleSheet, Text, View } from "react-native";
+import { Button, Modal, StyleSheet, View } from "react-native";
 import Card from '../components/Card';
 import CustomButton from "../components/CustomButton";
 import CustomText from "../components/CustomText";
+import { COMMON_STYLES, COLORS } from '../components/styles';
 
 export default function GameScreen({
   playerName,
@@ -34,7 +35,7 @@ export default function GameScreen({
   return (
     <Modal animationType="slide" transparent={true} visible={true}>
       
-      <View style={styles.container}>
+      <View style={COMMON_STYLES.container}>
         <View>
         <Card>
           {isWinner ? (
@@ -45,6 +46,7 @@ export default function GameScreen({
           ) : (
             <>
               <CustomText style={{ fontWeight: 'bold' }} >Hello, {playerName}</CustomText>
+              <CustomText>correct{correctNumber}</CustomText>
               <CustomText>You have chosen {userGuessedNumber}</CustomText>
               <CustomText>That's not my number!</CustomText>
               <CustomText>{message} </CustomText>
@@ -85,24 +87,8 @@ const styles = StyleSheet.create({
   buttonsContainer: { flexDirection: "column" },
   input: {
     borderBottomWidth: 20,
-    borderBottomColor: "purple",
+    borderBottomColor: COLORS.text,
     width: "50%",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "lavenderblush",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  input: {
-    borderBottomWidth: 1,
-    borderBottomColor: 'black', // Change this color as needed
-    marginBottom: 10,
-    paddingVertical: 5,
-  },
-  invalidInput: {
-    borderColor: 'red',
   },
 
 });
