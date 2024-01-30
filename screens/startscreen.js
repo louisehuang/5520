@@ -64,16 +64,12 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
     //check name and number is valid after first attempt
     checkNameValidity();
     checkNumberValidity();
-    if (isChecked && (!isValidName || !isValidNumber)) {
-      setConfirmPressed(true);
-    }
-  
-    if (isChecked && isValidName && isValidNumber) {
-      
+    if (isChecked && isValidName && isValidNumber && name.trim() !== '' && number.trim() !== '') {
       inputHandler(name, number);
       setUserData({ userName: name, userNumber: number });
       setConfirmPressed(true);
     } 
+    
   }
 
 
@@ -110,6 +106,7 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
               setNumber(text);
               checkNumberValidity(); // Check the validity on each text change
             }}
+            
             onBlur={checkNumberValidity}
           />
           {confirmPressed && !isValidNumber && <Text style={[styles.errorText, { marginTop: 1 }]}>Please enter a valid number</Text>}
