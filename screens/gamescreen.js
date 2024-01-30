@@ -25,7 +25,7 @@ export default function GameScreen({
     attemptsLeft--;
   } else if (attemptsLeft >= 1 && userGuessedNumber == correctNumber) {
     isWinner = true;
-  } else{
+  } else {
     message = ""
     attemptsLeft--;
   }

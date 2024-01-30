@@ -64,6 +64,9 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
     //check name and number is valid after first attempt
     checkNameValidity();
     checkNumberValidity();
+    if (isChecked && (!isValidName || !isValidNumber)) {
+      setConfirmPressed(true);
+    }
   
     if (isChecked && isValidName && isValidNumber) {
       
@@ -92,7 +95,9 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
               setName(text);
               checkNameValidity(); // Check the validity on each text change
             }}
-            onBlur={checkNameValidity}
+            onBlur={checkNameValidity} 
+        
+            
           />
           {confirmPressed && !isValidName && <Text style={styles.errorText}>Invalid Name</Text>}
 
@@ -101,12 +106,10 @@ export default function StartScreen({ inputHandler, originalUserName,originalUse
             style={[styles.input, !isValidNumber && styles.invalidInput]}
             value={number || originalUserNumber}
             keyboardType="number-pad"
-            maxLength={4}
             onChangeText={(text) => {
               setNumber(text);
               checkNumberValidity(); // Check the validity on each text change
             }}
-            
             onBlur={checkNumberValidity}
           />
           {confirmPressed && !isValidNumber && <Text style={[styles.errorText, { marginTop: 1 }]}>Please enter a valid number</Text>}
