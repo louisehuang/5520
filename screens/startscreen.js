@@ -4,20 +4,42 @@ import {
   Text,
   TextInput,
   View,
+  SafeAreaView,
+  Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import Checkbox from 'expo-checkbox';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Card from '../components/Card';
+import CustomButton from "../components/CustomButton";
+import { COMMON_STYLES, COLORS, LOCATION } from '../components/styles';
 
 
-export default function StartScreen({ inputHandler,  setAttemptsLeft, dismissModal,setUserData,}) {
-  const [text, setText] = useState("");
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+
+export default function StartScreen({ inputHandler, originalUserName,originalUserNumber,setUserData}) {
+  const [name, setName] = useState(originalUserName || '');
+  const [number, setNumber] = useState(originalUserNumber ||'');
   const [isValidName, setIsValidName] = useState(true);
   const [isValidNumber, setIsValidNumber] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
+  const [confirmPressed, setConfirmPressed] = useState(true);
   
+  //if the android keyboard showsup
+  useEffect(() => {
+    //dynamically adjust the layout when the keyboard is shown or hidden
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
 
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+     
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+  
   function checkNameValidity() {
     setIsValidName(name.length > 1 && !/^\d+$/.test(name));
   }
@@ -30,124 +52,108 @@ export default function StartScreen({ inputHandler,  setAttemptsLeft, dismissMod
   }
 
   function handleReset() {
-    setName('');
-    setNumber('');
+    setName(originalUserName || '');
+    setNumber(originalUserNumber || '');
     setIsValidName(true);
     setIsValidNumber(true);
     setIsChecked(false);
+
   }
+  
   function handleConfirm() {
-    if (isValidName && isValidNumber) {
-      // Perform actions when both name and number are valid
-      // For example, navigate to the next screen or start the game
-      setUserData({ userName: name, userNumber: number });
+    //check name and number is valid after first attempt
+    checkNameValidity();
+    checkNumberValidity();
+    if (isChecked && isValidName && isValidNumber && name.trim() !== '' && number.trim() !== '') {
       inputHandler(name, number);
-   
-    }
+      setUserData({ userName: name, userNumber: number });
+      setConfirmPressed(true);
+    } 
+    
   }
 
 
-  function cancelHandler() {
-    // hide the modal
-    dismissModal();
-  }
   return (
-    <View style={styles.container}>
-
-      <View style={styles.card}>
-        <Text style={styles.labelText}>Name:</Text>
-        <TextInput
-          style={[styles.input, !isValidName && styles.invalidInput]}
-          value={name}
-      
-          onChangeText={(text) => setName(text)}
-          onBlur={checkNameValidity}
-        />
-         {!isValidName && <Text style={styles.errorText}>Invalid Name</Text>}
-
-        <Text style={styles.labelText}>Enter a Number:</Text>
-        <TextInput
-          style={[styles.input, !isValidNumber && styles.invalidInput]}
-          value={number}
-          keyboardType="number-pad"
-          maxLength={4}
-          onChangeText={(text) => setNumber(text)}
-          onBlur={checkNumberValidity}
-        />
-        {!isValidNumber && (<Text style={[styles.errorText, { marginTop: 1 }]}>Please enter a valid number</Text>
-        )}
+    
+    <SafeAreaView style={COMMON_STYLES.container}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => Keyboard.dismiss()}
+        style={{ flex: 1 }}
+      >
+        <Card>
+        <Text style={COMMON_STYLES.labelText}>Name:</Text>
+          <TextInput
+            style={[styles.input, !isValidName && styles.invalidInput]}
+            
+            value={name || originalUserName}
+            onChangeText={(text) => {
+              setName(text);
+              checkNameValidity(); // Check the validity on each text change
+            }}
+            onBlur={checkNameValidity} 
         
-        <View style={styles.section}>
-        <Checkbox style={styles.checkbox} value={isChecked} onValueChange={setIsChecked} />
-        <Text style={styles.labelText}>I am not a robot</Text>
-        </View>
+            
+          />
+          {confirmPressed && !isValidName && <Text style={styles.errorText}>Invalid Name</Text>}
 
-        <View style={styles.buttonsContainer}>
-          <View style={styles.buttonView}>
-            <Button title="Reset" onPress={handleReset} />
+          <Text style={COMMON_STYLES.labelText}>Enter a Number:</Text>
+          <TextInput
+            style={[styles.input, !isValidNumber && styles.invalidInput]}
+            value={number || originalUserNumber}
+            keyboardType="number-pad"
+            onChangeText={(text) => {
+              setNumber(text);
+              checkNumberValidity(); // Check the validity on each text change
+            }}
+            
+            onBlur={checkNumberValidity}
+          />
+          {confirmPressed && !isValidNumber && <Text style={[styles.errorText, { marginTop: 1 }]}>Please enter a valid number</Text>}
+
+          <View style={styles.section}>
+            <Checkbox style={styles.checkbox} value={isChecked} onValueChange={setIsChecked} />
+            <Text style={COMMON_STYLES.labelText}>I am not a robot</Text>
           </View>
-          <View style={styles.buttonView}>
-            <Button title="Confirm" onPress={handleConfirm} 
-            disabled={!isChecked || !isValidName || !isValidNumber}
-              />
+
+          <View style={styles.buttonsContainer}>
+            <View style={styles.buttonView}>
+              <CustomButton title="Reset" onPress={handleReset} />
+            </View>
+            <View style={styles.buttonView}>
+              <Button title="Confirm" onPress={handleConfirm} disabled={!isChecked} />
+            </View>
           </View>
-        </View>
-      </View>
-    </View> 
+        </Card>
+        </TouchableOpacity>
+    </SafeAreaView>
 
   );
 }
 
 const styles = StyleSheet.create({
   buttonView: {
-    width: "30%",
+    width: "35%",
     margin: 5,
   },
   buttonsContainer: { flexDirection: "row" },
   input: {
-    borderBottomWidth: 2,
-    borderBottomColor: "purple",
+    borderBottomWidth: 10,
+    borderBottomColor: COLORS.text,
     width: "50%",
-  },
-  //这是中间的框，不知道干嘛的
-  container: {
-    flex: 1,
-    backgroundColor: "lavenderblush",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: { width: 100, height: 100 },
-  card: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: 'grey',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: 'c0c0c0',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   input: {
     borderBottomWidth: 1,
-    borderBottomColor: 'black', // Change this color as needed
+    borderBottomColor: COLORS.text,
+    fontSize: 20, 
+    color:COLORS.header,
     marginBottom: 10,
     paddingVertical: 5,
   },
-  invalidInput: {
-    borderColor: 'red',
-  },
-  labelText: {
-    color: 'purple',
-    fontSize: 25,
-  },
+
   checkboxContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: LOCATION.center,
   },
   checkboxLabel: {
     marginLeft: 10,

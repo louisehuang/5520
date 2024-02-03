@@ -1,125 +1,126 @@
-import React, { useState } from "react";
-import { StatusBar, StyleSheet, Text, View,SafeAreaView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StatusBar, View,SafeAreaView } from "react-native";
 import Header from "./components/Header";
 import StartScreen from "./screens/startscreen";
 import GameScreen from "./screens/gamescreen";
 import FinalScreen from "./screens/finalscreen";
+import { COMMON_STYLES } from './components/styles';
 
 export default function App() {
-  const appName = "Guess My Number";
-  const [text, setText] = useState("");
   const [screen, setScreen] = useState("start"); // start, game, final
   const [correctNumber, setCorrectNumber] = useState("");
-  const [attemptsLeft, setAttemptsLeft] = useState(2);
+  const [attemptsLeft, setAttemptsLeft] = useState(3);
   const [userData, setUserData] = useState({ userName: "", userNumber: "" });
+  const [isWinner, setIsWinner] = useState(false);
 
-  function startGame() {
+  useEffect(() => {
+    setCorrectNumber(generateRandomNumber());
+  }, []);
+
+  function generateRandomNumber() {
+    return Math.floor(Math.random() * 10) + 1020;
+  }
+
+  function startGame(name,number) {
     // Reset userData for a new game
-    setUserData({ userName: "", userNumber: "" });
+    setUserData({ userName: name, userNumber: number });
 
     // If correctNumber is not set, generate a new random number
     if (!correctNumber) {
-      const newRandomNumber = Math.floor(Math.random() * 10) + 1020;
-      setCorrectNumber(newRandomNumber);
+      setCorrectNumber(generateRandomNumber());
     }
     else{
       setCorrectNumber(correctNumber)
-
     }
+
     setScreen("game");
   }
 
 
   function handleTryAgain () {
-    // Generate a new random number for the user to guess
-    //setUserData({ userName: userData.userName, userNumber: "" });
-    //setCorrectNumber(correctNumber);
-    //setScreen("start");
-
-    
-    setCorrectNumber(correctNumber);
-    setAttemptsLeft(2);
+    startGame(userData.userName, userData.userNumber);
+    setAttemptsLeft(attemptsLeft - 1);
     setScreen("start");
     
   };
 
 
   function receiveInput(name,number) {
-    console.log("receive input ", name,number);
     setUserData({ userName: name, userNumber: number });
     setScreen("game");
   }
 
-  function dismissModal() {
+  function restartGame() {
     setScreen("start");
+    setUserData({ userName: "", userNumber: "" });
+    setAttemptsLeft(3);
+    setCorrectNumber(generateRandomNumber());
   }
 
   function handleIamDone() {
-    setUserData({ userName: "", userNumber: "" });
-    setCorrectNumber("");
-    setAttemptsLeft(2);
+    setScreen("final");
+    setIsWinner(false)
+  }
+
+  function handleThankYou() {
+    setIsWinner(true);
     setScreen("final");
   }
 
+  
+
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.topView}>
+    <SafeAreaView style={COMMON_STYLES.container}>
+      <View style={COMMON_STYLES.topView}>
         <StatusBar style="auto" />
-        <Header name={appName} version={2} />
+
+        {screen === "final" && (
+          <Header name="Game Is Over!" version={2} />
+        )}
+        {screen === "start" && (
+          <Header name="Guess My Number" version={2} />
+        )}
 
         {screen === "start" && (
           <StartScreen
             inputHandler={receiveInput}
             modalVisible={screen === "game"}
-            dismissModal={dismissModal}
+            startGame={startGame} 
             setUserData={setUserData} 
-            startGame={startGame}
-            
+
+            //the name and number entered previously will be displayed in textInput
+            originalUserName={userData.userName}
+            originalUserNumber={userData.userNumber}
+            correctNumber={correctNumber} 
+
           />
         )}
 
 
         {screen === "game" && (
           <GameScreen
-            playerName={userData.userName} // Pass the player name dynamically
-            correctNumber={correctNumber}
+            //// Pass the player name and number
+            playerName={userData.userName}   
             userGuessedNumber ={userData.userNumber}
+            correctNumber={correctNumber}
             attemptsLeft={attemptsLeft}
             onTryAgain={handleTryAgain}
             onIamDone={handleIamDone}
+            onThankYou={handleThankYou}
           />
         )}
 
-        {screen === "final" && <FinalScreen onRestartGame={dismissModal} />}
+        {screen === "final" && <FinalScreen
+        isWinner={isWinner} 
+        
+        onRestartGame={restartGame} />}
       </View>
 
-      <View style={styles.bottomView}>
-        <Text style={styles.text}>{text}</Text>
+      <View style={COMMON_STYLES.bottomView}>
+       
       </View>   
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "lavenderblush",
-    justifyContent: "center",
-  },
-  topView: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "lavenderblush",
-    justifyContent: "space-around",
-  },
-  bottomView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 18,
-    color: "purple",
-  },
-});

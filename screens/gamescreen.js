@@ -1,5 +1,9 @@
 import React from "react";
-import { Button, Modal, StyleSheet, Text, View } from "react-native";
+import { Button, Modal, StyleSheet, View } from "react-native";
+import Card from '../components/Card';
+import CustomButton from "../components/CustomButton";
+import CustomText from "../components/CustomText";
+import { COMMON_STYLES, COLORS } from '../components/styles';
 
 export default function GameScreen({
   playerName,
@@ -7,57 +11,68 @@ export default function GameScreen({
   userGuessedNumber,
   attemptsLeft,
   onTryAgain,
-  onIamDone, }) {
+  onIamDone, 
+  onThankYou,}) {
   
-  let message = "";
   let isWinner = false;
+  let message = ""
 
-  if (userGuessedNumber < correctNumber) {
-    message = "That's not my number! Guess higher!";
+  if (attemptsLeft > 1 && userGuessedNumber < correctNumber) {
+    message = "Guess higher!";
     attemptsLeft--;
-  } else if (userGuessedNumber > correctNumber) {
-    message = "That's not my number! Guess lower!";
+  } else if (attemptsLeft > 1 && userGuessedNumber > correctNumber) {
+    message = "Guess lower!";
     attemptsLeft--;
-  } else {
+  } else if (attemptsLeft >= 1 && userGuessedNumber == correctNumber) {
     isWinner = true;
+  } else {
+    message = ""
+    attemptsLeft--;
   }
 
 
-  function handlePlayAgain () {
-    onPlayAgain(attemptsLeft);
-  };
 
   return (
     <Modal animationType="slide" transparent={true} visible={true}>
       
-      <View style={styles.container}>
-        <View style={styles.card}>
-        <Text style={styles.labelText}>{playerName} You have chosen {userGuessedNumber}</Text>
-        <Text style={styles.labelText}> correct {correctNumber}</Text>
-
-          {/*isWinner ? (
+      <View style={COMMON_STYLES.container}>
+        <View>
+        <Card>
+          {isWinner ? (
             <>
-              <Text>Congratulations {playerName}! You won!</Text>
+              <CustomText style={{textAlign: 'center' }}>Congratulations {playerName}! You won!</CustomText>
+              <Button title="Thank You" onPress={onThankYou} />
             </>
           ) : (
             <>
-              <Text style={styles.labelText}>Hello, {playerName}</Text>
-              <Text style={styles.labelText}>You have chosen {userGuessedNumber}</Text>
-              <Text>{`You have ${attemptsLeft} attempts left!`}</Text>
+              <CustomText style={{ fontWeight: 'bold' }} >Hello, {playerName}</CustomText>
+              <CustomText>You have chosen {userGuessedNumber}</CustomText>
+              <CustomText>That's not my number!</CustomText>
+              <CustomText>{message} </CustomText>
+
+              {attemptsLeft > 0 ? (
+              <CustomText>{`You have ${attemptsLeft} attempts left!`} </CustomText>
+            ) : (
+              <CustomText>{`You have no attempts left!`}</CustomText>
+            )}
+
+            <View style={styles.buttonsContainer}>
+            <View style={styles.buttonView}>
+              <CustomButton title="I am done" onPress={onIamDone} />
+            </View>
+            <View style={styles.buttonView}>
+              <Button title="Let Me Guess Again" onPress={onTryAgain} disabled={attemptsLeft === 0}/>
+            </View>
+            
+          </View>
             
             </>
-          )*/}
+          )}
 
+         
+        </Card>  
 
-          <View style={styles.buttonsContainer}>
-            <View style={styles.buttonView}>
-              <Button title="Let Me Guess Again" onPress={onTryAgain} />
-            </View>
-            <View style={styles.buttonView}>
-              <Button title="I am done" onPress={onIamDone} />
-            </View>
-          </View>
-        </View>
+        </View>  
       </View>
     </Modal>
   );
@@ -65,50 +80,14 @@ export default function GameScreen({
 
 const styles = StyleSheet.create({
   buttonView: {
-    width: "30%",
+    width: "100%",
     margin: 5,
   },
-  buttonsContainer: { flexDirection: "row" },
+  buttonsContainer: { flexDirection: "column" },
   input: {
-    borderBottomWidth: 2,
-    borderBottomColor: "purple",
+    borderBottomWidth: 20,
+    borderBottomColor: COLORS.text,
     width: "50%",
-  },
-  //这是中间的框，不知道干嘛的
-  container: {
-    flex: 1,
-    backgroundColor: "lavenderblush",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: { width: 100, height: 100 },
-  card: {
-    height: "50%",
-    width: "50%",
-    backgroundColor: 'grey',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: 'c0c0c0',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  input: {
-    borderBottomWidth: 1,
-    borderBottomColor: 'black', // Change this color as needed
-    marginBottom: 10,
-    paddingVertical: 5,
-  },
-  invalidInput: {
-    borderColor: 'red',
-  },
-  labelText: {
-    color: 'purple',
-    fontSize: 25,
   },
 
 });
